@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Namma Convo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-hover: #F5F5F7;
+      --border: #E5E5EA;
+      --text-primary: #1D1D1F;
+      --text-secondary: #86868B;
+      --accent: #000000;
+      --accent-light: rgba(0, 0, 0, 0.05);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+
+      --shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.08);
+      --transition-snappy: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── TYPOGRAPHY ─── */
+    h1,
+    h2,
+    h3 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      padding: 32px 24px 0;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-top {
+      max-width: 860px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text-primary);
+    }
+
+    .logo-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .lang-tabs {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .lang-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .lang-tab {
+      padding: 12px 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      transition: color var(--transition-snappy);
+      white-space: nowrap;
+    }
+
+    .lang-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .lang-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 120px;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+      animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ─── LESSON HEADER ─── */
+    .lesson-header {
+      margin-bottom: 24px;
+    }
+
+    .lesson-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .lesson-title {
+      font-size: 40px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .lesson-desc {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 640px;
+    }
+
+    /* ─── STATS ─── */
+    .stats-row {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 64px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-num {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ─── SCENE GRID ─── */
+    .section-label {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .scene-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      cursor: pointer;
+      transition: all var(--transition-snappy);
+      text-align: left;
+    }
+
+    .scene-card:hover {
+      border-color: transparent;
+      background: var(--surface-hover);
+      transform: scale(1.02);
+    }
+
+    .scene-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .scene-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .scene-count {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ─── PHRASE CARDS ─── */
+    .phrase-card {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 0;
+      cursor: pointer;
+      transition: all var(--transition-snappy);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phrase-card:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .phrase-card:hover {
+      background: var(--surface-hover);
+      padding-left: 24px;
+      padding-right: 24px;
+      border-radius: var(--radius-md);
+      border-bottom-color: transparent;
+    }
+
+    .phrase-header {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .phrase-number {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      min-width: 24px;
+    }
+
+    .phrase-english {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .phrase-detail {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all var(--transition-snappy);
+      padding-left: 48px;
+    }
+
+    .phrase-card.expanded {
+      background: var(--surface-hover);
+      padding: 32px 24px;
+      border-radius: var(--radius-md);
+      border-bottom-color: transparent;
+      margin: 12px 0;
+    }
+
+    .phrase-card.expanded .phrase-detail {
+      max-height: 400px;
+      opacity: 1;
+      margin-top: 24px;
+    }
+
+    .phrase-native {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .phrase-transliteration {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .phrase-breakdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .word-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .word-chip span {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ─── TIP CARD ─── */
+    .tip-card {
+      background: var(--surface-hover);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-top: 48px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .tip-card strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ─── UTILS ─── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-bottom: 32px;
+      transition: all var(--transition-snappy);
+    }
+
+    .back-link .chevron {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1;
+      margin-top: -2px;
+      transition: transform var(--transition-snappy);
+    }
+
+    .back-link:hover {
+      color: var(--text-primary);
+    }
+
+    .back-link:hover .chevron {
+      transform: translateX(-4px);
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface-hover);
+      border-radius: 2px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--text-primary);
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
+      .header {
+        padding: 20px 20px 0;
+      }
+
+      .main {
+        padding: 40px 20px 80px;
+      }
+
+      .lesson-title {
+        font-size: 32px;
+      }
+
+      .lesson-desc {
+        font-size: 16px;
+      }
+
+      .stats-row {
+        gap: 24px;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
+      }
+
+      .stat-num {
+        font-size: 28px;
+      }
+
+      .scene-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phrase-card {
+        padding: 24px 0;
+      }
+
+      .phrase-card:hover {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .phrase-card.expanded {
+        padding: 24px 16px;
+      }
+
+      .phrase-detail {
+        padding-left: 0;
+      }
+
+      .phrase-english {
+        font-size: 18px;
+      }
+
+      .phrase-native {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">Namma Convo</div>
+    </div>
+    <div class="lang-tabs">
+      <button class="lang-tab active" onclick="setLang('kn',this)">Kannada</button>
+      <button class="lang-tab" onclick="setLang('ta',this)">Tamil</button>
+      <button class="lang-tab" onclick="setLang('te',this)">Telugu</button>
+      <button class="lang-tab" onclick="setLang('hi',this)">Hindi</button>
+      <button class="lang-tab" onclick="setLang('ml',this)">Malayalam</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="view active" id="view-home">
+      <div class="lesson-header">
+        <div class="lesson-desc" id="lang-desc">Practical phrases for daily life in Karnataka. Locals always appreciate
+          the effort — even a few words go a long way.</div>
+      </div>
+      <div class="scene-grid" id="scene-grid"></div>
+      <div class="tip-card" id="home-tip"></div>
+    </div>
+
+    <div class="view" id="view-lesson">
+      <div class="back-link" onclick="showHome()"><span class="chevron">&#8249;</span> Back</div>
+      <div class="lesson-header">
+        <div class="lesson-title" id="lesson-title"></div>
+        <div class="lesson-desc" id="lesson-desc"></div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="lesson-progress"></div>
+      </div>
+      <div id="phrases-container"></div>
+    </div>
+  </div>
+
+  <script>
+    const DB = {
+      kn: {
+        desc: ' Locals always appreciate the effort, even if you just mix a few Kannada words with English!',
+        tip: 'If you ever get stuck, just smile and say "Kannada swalpa swalpa barutte" (I only know a little bit of Kannada). It instantly lightens the mood and shows you are trying!',
+        scenes: [
+          {
+            id: 'auto', icon: '🛺', name: 'Auto Driver', count: 10,
+            desc: 'When interacting with auto drivers in Bengaluru or other parts of Karnataka, a polite Namaskara saar (Hello, sir) goes a long way.',
+            phrases: [
+              { en: 'Will you come to [Location]?', native: '[Location] ge barthira?', roman: 'ge = to · barthira = will you come?', words: [{ w: 'ge', m: 'to' }, { w: 'barthira', m: 'will you come?' }] },
+              { en: 'How much will it cost to go there?', native: 'Alli ge eshtu agutte?', roman: 'Alli = there · eshtu = how much', words: [{ w: 'Alli', m: 'there' }, { w: 'eshtu', m: 'how much' }, { w: 'agutte', m: 'will it be?' }] },
+              { en: 'Please turn on the meter.', native: 'Meter haki, sir.', roman: 'haki = put / turn on', words: [{ w: 'Meter', m: 'meter' }, { w: 'haki', m: 'put/turn on' }] },
+              { en: 'I am standing at the location.', native: 'Location alli nintu kondidini.', roman: 'alli = at · nintu kondidini = standing', words: [{ w: 'alli', m: 'at / there' }, { w: 'nintu', m: 'standing' }, { w: 'kondidini', m: 'I am' }] },
+              { en: 'Can you show the scanner / QR code?', native: 'Scanner thoristhira?', roman: 'thoristhira = will you show?', words: [{ w: 'thoristhira', m: 'will you show?' }] },
+              { en: 'Please go straight, then take a left.', native: 'Straight hogi, aamele left thagolli.', roman: 'hogi = go · aamele = then · thagolli = take', words: [{ w: 'hogi', m: 'go' }, { w: 'aamele', m: 'then' }, { w: 'thagolli', m: 'take' }] },
+              { en: 'Please drive a little slower.', native: 'Swalpa mellage hogi.', roman: 'Swalpa = a little · mellage = slow', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'mellage', m: 'slowly' }, { w: 'hogi', m: 'go' }] },
+              { en: 'I am getting late, please go a bit fast.', native: 'Nange late aagthide, swalpa bega hogi.', roman: 'bega = fast · Nange = to me', words: [{ w: 'Nange', m: 'to me' }, { w: 'bega', m: 'fast' }, { w: 'hogi', m: 'go' }] },
+              { en: 'Please stop right here.', native: 'Illi nillisi.', roman: 'Illi = here · nillisi = stop', words: [{ w: 'Illi', m: 'here' }, { w: 'nillisi', m: 'stop' }] },
+              { en: 'Do you have change for 500 rupees?', native: 'Iynoornu (500) rupayi ge change idya?', roman: 'idya = do you have?', words: [{ w: 'Iynoornu (500)', m: '500' }, { w: 'rupayi', m: 'rupees' }, { w: 'idya', m: 'do you have?' }] },
+            ]
+          },
+          {
+            id: 'hotel', icon: '🍽️', name: 'Restaurant', count: 10,
+            desc: 'Food is a massive part of the culture, and knowing how to order and compliment the food will instantly win you smiles.',
+            phrases: [
+              { en: 'Do you have a table for two?', native: 'Ibbarige table idya?', roman: 'Ibbarige = for two people · idya = do you have?', words: [{ w: 'Ibbarige', m: 'for two' }, { w: 'idya', m: 'do you have?' }] },
+              { en: 'Please give me the menu.', native: 'Menu kodi.', roman: 'kodi = give (polite)', words: [{ w: 'kodi', m: 'give (polite)' }] },
+              { en: 'What is today\'s special?', native: 'Ivattu special enu?', roman: 'Ivattu = today · enu = what', words: [{ w: 'Ivattu', m: 'today' }, { w: 'special', m: 'special' }, { w: 'enu', m: 'what?' }] },
+              { en: 'Give me one plate Idli and one Coffee.', native: 'Ondu plate idli mathu ondu coffee kodi.', roman: 'Ondu = one · mathu = and · kodi = give', words: [{ w: 'Ondu', m: 'one' }, { w: 'mathu', m: 'and' }, { w: 'kodi', m: 'give' }] },
+              { en: 'Please give us some drinking water.', native: 'Kudiyoke neeru kodi.', roman: 'Kudiyoke = for drinking · neeru = water', words: [{ w: 'Kudiyoke', m: 'to drink' }, { w: 'neeru', m: 'water' }, { w: 'kodi', m: 'give' }] },
+              { en: 'Make it a little spicy, please.', native: 'Swalpa khara madi.', roman: 'khara = spicy · madi = make/do', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'khara', m: 'spicy' }, { w: 'madi', m: 'make/do' }] },
+              { en: 'Where is the washroom?', native: 'Washroom elli ide?', roman: 'elli ide = where is it?', words: [{ w: 'elli', m: 'where' }, { w: 'ide', m: 'is it?' }] },
+              { en: 'The food is very good!', native: 'Oota tumba chennagide!', roman: 'Oota = food · tumba = very · chennagide = nice', words: [{ w: 'Oota', m: 'food' }, { w: 'tumba', m: 'very' }, { w: 'chennagide', m: 'it is nice' }] },
+              { en: 'Please bring the bill.', native: 'Bill kodi.', roman: 'kodi = give (polite)', words: [{ w: 'Bill', m: 'bill' }, { w: 'kodi', m: 'give' }] },
+              { en: 'I will pay using Google Pay / PhonePe.', native: 'Naanu G-pay/PhonePe alli pay madthini.', roman: 'Naanu = I · alli = using', words: [{ w: 'Naanu', m: 'I' }, { w: 'alli', m: 'using' }, { w: 'madthini', m: 'will do' }] },
+            ]
+          }
+        ]
+      },
+      ta: {
+        desc: 'Tamil is one of the world\'s oldest classical languages. These phrases work across Tamil Nadu and Chennai.',
+        tip: 'Tamil speakers appreciate when you say "Romba nandri" (thank you so much) — the "romba" adds warmth.',
+        scenes: [
+          {
+            id: 'auto', icon: '🛺', name: 'Auto Driver', count: 5,
+            desc: 'Essential phrases for getting around Chennai and Tamil Nadu by auto.',
+            phrases: [
+              { en: 'Will you come to [Location]?', native: '[Location] varuveenga?', roman: 'varuveenga = will you come? (polite)', words: [{ w: 'varuveenga', m: 'will you come?' }] },
+              { en: 'How much will it cost?', native: 'Evvalavu aagum?', roman: 'Evvalavu = how much · aagum = will it be?', words: [{ w: 'Evvalavu', m: 'how much' }, { w: 'aagum', m: 'will be' }] },
+              { en: 'Please go straight.', native: 'Nere ponga.', roman: 'Nere = straight · ponga = please go', words: [{ w: 'Nere', m: 'straight' }, { w: 'ponga', m: 'please go' }] },
+              { en: 'Stop here please.', native: 'Inga niruthunga.', roman: 'Inga = here · niruthunga = please stop', words: [{ w: 'Inga', m: 'here' }, { w: 'niruthunga', m: 'stop' }] },
+              { en: 'Please go a little slowly.', native: 'Kொஞ்சம் மெதுவா ponga.', roman: 'Konjam = a little · methuva = slowly', words: [{ w: 'Konjam', m: 'a little' }, { w: 'methuva', m: 'slowly' }] },
+            ]
+          },
+          {
+            id: 'food', icon: '🍽️', name: 'Restaurant', count: 5,
+            desc: 'Order food and compliment the cook in Tamil.',
+            phrases: [
+              { en: 'Give me one plate rice.', native: 'Oru plate saapadu kodu.', roman: 'Oru = one · saapadu = meal/food · kodu = give', words: [{ w: 'Oru', m: 'one' }, { w: 'saapadu', m: 'meal' }, { w: 'kodu', m: 'give' }] },
+              { en: 'Give me some water.', native: 'Konjam thanni kodu.', roman: 'Konjam = some · thanni = water', words: [{ w: 'Konjam', m: 'some' }, { w: 'thanni', m: 'water' }, { w: 'kodu', m: 'give' }] },
+              { en: 'The food is very tasty!', native: 'Saapadu romba tasty-a irukku!', roman: 'romba = very · irukku = it is', words: [{ w: 'romba', m: 'very' }, { w: 'irukku', m: 'it is' }] },
+              { en: 'Please bring the bill.', native: 'Bill konda vanga.', roman: 'konda vanga = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'konda vanga', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Washroom enga irukku?', roman: 'enga = where · irukku = is?', words: [{ w: 'enga', m: 'where' }, { w: 'irukku', m: 'is' }] },
+            ]
+          }
+        ]
+      },
+      te: {
+        desc: 'Telugu, called the "Italian of the East" for its musicality, is widely spoken across two states.',
+        tip: 'Telugu speakers love when outsiders try — "Chala Manchidi" (it\'s very good) said with enthusiasm always works.',
+        scenes: [
+          {
+            id: 'auto', icon: '🛺', name: 'Auto Driver', count: 5,
+            desc: 'Get around Hyderabad and Vijayawada with these basics.',
+            phrases: [
+              { en: 'Will you come to [Location]?', native: '[Location] ki vastara?', roman: 'ki = to · vastara = will you come?', words: [{ w: 'ki', m: 'to' }, { w: 'vastara', m: 'will you come?' }] },
+              { en: 'How much is the fare?', native: 'Chargelu entha?', roman: 'Chargelu = charge/fare · entha = how much?', words: [{ w: 'Chargelu', m: 'fare' }, { w: 'entha', m: 'how much?' }] },
+              { en: 'Please go straight.', native: 'Straight pampinchu.', roman: 'pampinchu = send / go forward', words: [{ w: 'Straight', m: 'straight' }, { w: 'pampinchu', m: 'go forward' }] },
+              { en: 'Stop here.', native: 'Ikkade aapandi.', roman: 'Ikkade = here · aapandi = please stop', words: [{ w: 'Ikkade', m: 'here' }, { w: 'aapandi', m: 'please stop' }] },
+              { en: 'Please go a little slow.', native: 'Koddiga mellaga velandi.', roman: 'Koddiga = a little · mellaga = slowly', words: [{ w: 'Koddiga', m: 'a little' }, { w: 'mellaga', m: 'slowly' }, { w: 'velandi', m: 'please go' }] },
+            ]
+          },
+          {
+            id: 'food', icon: '🍽️', name: 'Restaurant', count: 5,
+            desc: 'Order meals and connect with locals over the famous Telugu cuisine.',
+            phrases: [
+              { en: 'Give me one plate rice.', native: 'Okka plate annamu ivvandi.', roman: 'Okka = one · annamu = rice · ivvandi = please give', words: [{ w: 'Okka', m: 'one' }, { w: 'annamu', m: 'rice/meal' }, { w: 'ivvandi', m: 'please give' }] },
+              { en: 'Give me some water.', native: 'Koddiga neellu ivvandi.', roman: 'neellu = water · ivvandi = please give', words: [{ w: 'Koddiga', m: 'some' }, { w: 'neellu', m: 'water' }, { w: 'ivvandi', m: 'please give' }] },
+              { en: 'The food is very tasty!', native: 'Vanta chala bavundi!', roman: 'Vanta = food · chala = very · bavundi = good', words: [{ w: 'Vanta', m: 'food' }, { w: 'chala', m: 'very' }, { w: 'bavundi', m: 'good' }] },
+              { en: 'Please bring the bill.', native: 'Bill teesukurandi.', roman: 'teesukurandi = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'teesukurandi', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Rest room ekkada undi?', roman: 'ekkada = where · undi = is it?', words: [{ w: 'ekkada', m: 'where' }, { w: 'undi', m: 'is it?' }] },
+            ]
+          }
+        ]
+      },
+      hi: {
+        desc: 'Hindi is understood across India. These phrases work in Delhi, Mumbai, and beyond.',
+        tip: '"Bahut shukriya" (thank you very much) is more warm and heartfelt than the standard "dhanyavaad".',
+        scenes: [
+          {
+            id: 'auto', icon: '🛺', name: 'Auto / Cab Driver', count: 5,
+            desc: 'Navigate Delhi, Mumbai, and other cities with confidence.',
+            phrases: [
+              { en: 'Will you go to [Location]?', native: '[Location] chaloge?', roman: 'chaloge = will you go? (informal)', words: [{ w: 'chaloge', m: 'will you go?' }] },
+              { en: 'How much will it cost?', native: 'Kitna lagega?', roman: 'Kitna = how much · lagega = will it be?', words: [{ w: 'Kitna', m: 'how much' }, { w: 'lagega', m: 'will it cost?' }] },
+              { en: 'Please go straight.', native: 'Seedha chaliye.', roman: 'Seedha = straight · chaliye = please go', words: [{ w: 'Seedha', m: 'straight' }, { w: 'chaliye', m: 'please go' }] },
+              { en: 'Stop here please.', native: 'Yahan rokiye.', roman: 'Yahan = here · rokiye = please stop', words: [{ w: 'Yahan', m: 'here' }, { w: 'rokiye', m: 'please stop' }] },
+              { en: 'Please drive a little slowly.', native: 'Thoda dheere chaliye.', roman: 'Thoda = a little · dheere = slowly', words: [{ w: 'Thoda', m: 'a little' }, { w: 'dheere', m: 'slowly' }, { w: 'chaliye', m: 'please go' }] },
+            ]
+          },
+          {
+            id: 'food', icon: '🍽️', name: 'Restaurant / Dhaba', count: 5,
+            desc: 'Order meals, ask for water, and compliment the khana.',
+            phrases: [
+              { en: 'Give me one plate rice.', native: 'Ek plate chawal dena.', roman: 'Ek = one · chawal = rice · dena = give', words: [{ w: 'Ek', m: 'one' }, { w: 'chawal', m: 'rice' }, { w: 'dena', m: 'give' }] },
+              { en: 'Please give me some water.', native: 'Thoda paani dena.', roman: 'Thoda = some · paani = water', words: [{ w: 'Thoda', m: 'some' }, { w: 'paani', m: 'water' }, { w: 'dena', m: 'give' }] },
+              { en: 'The food is very delicious!', native: 'Khana bahut achha hai!', roman: 'Khana = food · bahut = very · achha = good', words: [{ w: 'Khana', m: 'food' }, { w: 'bahut', m: 'very' }, { w: 'achha', m: 'good' }] },
+              { en: 'Please bring the bill.', native: 'Bill lana.', roman: 'lana = bring (please)', words: [{ w: 'Bill', m: 'bill' }, { w: 'lana', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Washroom kahan hai?', roman: 'kahan = where · hai = is?', words: [{ w: 'kahan', m: 'where' }, { w: 'hai', m: 'is?' }] },
+            ]
+          }
+        ]
+      },
+      ml: {
+        desc: 'Malayalam is the language of Kerala. Even a simple "Nanni" (thank you) connects you with the locals.',
+        tip: 'In Kerala, saying "Ente peru [your name]" (My name is…) after a greeting creates instant warmth.',
+        scenes: [
+          {
+            id: 'auto', icon: '🛺', name: 'Auto Driver', count: 5,
+            desc: 'Get around Kochi, Thiruvananthapuram, and Calicut with these basics.',
+            phrases: [
+              { en: 'Will you come to [Location]?', native: '[Location] varumo?', roman: 'varumo = will you come?', words: [{ w: 'varumo', m: 'will you come?' }] },
+              { en: 'How much will it cost?', native: 'Ethra aaagum?', roman: 'Ethra = how much · aagum = will be', words: [{ w: 'Ethra', m: 'how much' }, { w: 'aagum', m: 'will be' }] },
+              { en: 'Please go straight.', native: 'Nerey poko.', roman: 'Nerey = straight · poko = go', words: [{ w: 'Nerey', m: 'straight' }, { w: 'poko', m: 'go' }] },
+              { en: 'Stop here please.', native: 'Ithuvide nilkku.', roman: 'Ithuvide = here · nilkku = stop', words: [{ w: 'Ithuvide', m: 'here' }, { w: 'nilkku', m: 'stop' }] },
+              { en: 'Please go a little slow.', native: 'Swalpa pahuthi poko.', roman: 'Swalpa = a little · pahuthi = slowly', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'pahuthi', m: 'slowly' }, { w: 'poko', m: 'go' }] },
+            ]
+          },
+          {
+            id: 'food', icon: '🍽️', name: 'Restaurant', count: 5,
+            desc: 'Order Kerala\'s famous cuisine and connect over food.',
+            phrases: [
+              { en: 'Give me one plate rice.', native: 'Oru plate chorum tharanam.', roman: 'Oru = one · chorum = rice · tharanam = please give', words: [{ w: 'Oru', m: 'one' }, { w: 'chorum', m: 'rice' }, { w: 'tharanam', m: 'please give' }] },
+              { en: 'Give me some water.', native: 'Konjam vellam tharanam.', roman: 'Konjam = some · vellam = water', words: [{ w: 'Konjam', m: 'some' }, { w: 'vellam', m: 'water' }, { w: 'tharanam', m: 'please give' }] },
+              { en: 'The food is very tasty!', native: 'Kazhicha nannayirunnu!', roman: 'Kazhicha = the eaten food · nannayirunnu = was very good', words: [{ w: 'nannayirunnu', m: 'was very good' }] },
+              { en: 'Please bring the bill.', native: 'Bill kondu varoo.', roman: 'kondu varoo = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'kondu varoo', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Toilet evide und?', roman: 'evide = where · und = is there?', words: [{ w: 'evide', m: 'where' }, { w: 'und', m: 'is there?' }] },
+            ]
+          }
+        ]
+      }
+    };
+
+    let currentLang = 'kn';
+    let readCount = 0;
+    let readSet = new Set();
+
+    function applyTheme(lang) {
+      document.body.className = 'theme-' + lang;
+    }
+
+    function setLang(lang, btn) {
+      currentLang = lang;
+      applyTheme(lang);
+      document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      readSet = new Set(); readCount = 0;
+      showHome();
+    }
+
+    function showHome() {
+      document.getElementById('view-home').classList.add('active');
+      document.getElementById('view-lesson').classList.remove('active');
+      const d = DB[currentLang];
+      document.getElementById('lang-desc').textContent = d.desc;
+      document.getElementById('home-tip').innerHTML = '<strong>Tip:</strong> ' + d.tip;
+      const grid = document.getElementById('scene-grid');
+      grid.innerHTML = '';
+      d.scenes.forEach(sc => {
+        const c = document.createElement('button');
+        c.className = 'scene-card';
+        c.innerHTML = `<span class="scene-icon">${sc.icon}</span><div class="scene-name">${sc.name}</div><div class="scene-count">${sc.count} phrases</div>`;
+        c.onclick = () => showLesson(sc.id);
+        grid.appendChild(c);
+      });
+    }
+
+    function showLesson(sceneId) {
+      const sc = DB[currentLang].scenes.find(s => s.id === sceneId);
+      document.getElementById('view-home').classList.remove('active');
+      document.getElementById('view-lesson').classList.add('active');
+      document.getElementById('lesson-title').textContent = sc.icon + ' ' + sc.name;
+      document.getElementById('lesson-desc').textContent = sc.desc;
+
+      const container = document.getElementById('phrases-container');
+      container.innerHTML = '';
+
+      const sceneKey = currentLang + '-' + sceneId;
+      let sceneRead = 0;
+      sc.phrases.forEach((p, i) => {
+        const key = sceneKey + '-' + i;
+        if (readSet.has(key)) sceneRead++;
+      });
+      updateProgress(sceneKey, sc, sceneRead);
+
+      sc.phrases.forEach((p, i) => {
+        const key = sceneKey + '-' + i;
+        const card = document.createElement('div');
+        card.className = 'phrase-card';
+        card.id = 'card-' + i;
+
+        const chips = p.words.map(w => `<div class="word-chip">${w.w}<span>${w.m}</span></div>`).join('');
+
+        card.innerHTML = `
+      <div class="phrase-header">
+        <div class="phrase-number">${String(i + 1).padStart(2, '0')}</div>
+        <div class="phrase-english">"${p.en}"</div>
+      </div>
+      <div class="phrase-detail">
+        <div class="phrase-native">${p.native}</div>
+        <div class="phrase-transliteration">${p.roman}</div>
+        <div class="phrase-breakdown">${chips}</div>
+      </div>
+    `;
+
+        card.onclick = () => {
+          const wasExpanded = card.classList.contains('expanded');
+          card.classList.toggle('expanded');
+          if (!wasExpanded && !readSet.has(key)) {
+            readSet.add(key); readCount++;
+            let sr = 0;
+            sc.phrases.forEach((_, j) => { if (readSet.has(sceneKey + '-' + j)) sr++; });
+            updateProgress(sceneKey, sc, sr);
+          }
+        };
+        container.appendChild(card);
+      });
+    }
+
+    function updateProgress(sceneKey, sc, count) {
+      const pct = Math.round((count / sc.count) * 100);
+      document.getElementById('lesson-progress').style.width = pct + '%';
+    }
+
+    applyTheme(currentLang);
+    showHome();
+  </script>
+</body>
+
+</html>
