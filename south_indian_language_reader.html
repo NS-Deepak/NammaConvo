@@ -9,21 +9,25 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
     :root {
-      --bg: #FFFFFF;
+      --bg: #F5F5F7;
       --surface: #FFFFFF;
-      --surface-hover: #F5F5F7;
-      --border: #E5E5EA;
+      --surface-hover: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.06);
       --text-primary: #1D1D1F;
       --text-secondary: #86868B;
       --accent: #000000;
       --accent-light: rgba(0, 0, 0, 0.05);
 
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
 
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.04);
       --shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.08);
-      --transition-snappy: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --shadow-active: 0 2px 6px rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.02);
+
+      --transition-snappy: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     * {
@@ -42,19 +46,17 @@
     }
 
     /* ─── TYPOGRAPHY ─── */
-    h1,
-    h2,
-    h3 {
-      font-weight: 600;
+    h1, h2, h3 {
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
     /* ─── HEADER ─── */
     .header {
       padding: 32px 24px 0;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(245, 245, 247, 0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -98,7 +100,7 @@
     .lang-tab {
       padding: 12px 0;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
       background: none;
@@ -130,7 +132,6 @@
         opacity: 0;
         transform: translateY(12px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -143,7 +144,7 @@
 
     .view.active {
       display: block;
-      animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     }
 
     /* ─── LESSON HEADER ─── */
@@ -164,12 +165,15 @@
       font-size: 40px;
       line-height: 1.1;
       margin-bottom: 16px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
     }
 
     .lesson-desc {
       font-size: 18px;
       color: var(--text-secondary);
       max-width: 640px;
+      line-height: 1.4;
     }
 
     /* ─── STATS ─── */
@@ -214,22 +218,28 @@
 
     .scene-card {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid transparent;
       border-radius: var(--radius-lg);
       padding: 32px;
       cursor: pointer;
-      transition: all var(--transition-snappy);
+      transition: transform var(--transition-snappy), box-shadow var(--transition-snappy);
       text-align: left;
+      box-shadow: var(--shadow-card);
+      will-change: transform, box-shadow;
     }
 
     .scene-card:hover {
-      border-color: transparent;
-      background: var(--surface-hover);
-      transform: scale(1.02);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+    
+    .scene-card:active {
+      transform: scale(0.97);
+      box-shadow: var(--shadow-active);
     }
 
     .scene-icon {
-      font-size: 32px;
+      font-size: 36px;
       margin-bottom: 16px;
       display: block;
     }
@@ -238,23 +248,27 @@
       font-size: 20px;
       font-weight: 600;
       margin-bottom: 6px;
+      letter-spacing: -0.02em;
     }
 
     .scene-count {
       font-size: 14px;
       color: var(--text-secondary);
+      font-weight: 500;
     }
 
     /* ─── PHRASE CARDS ─── */
     .phrase-card {
-      background: var(--surface);
+      background: transparent;
       border-bottom: 1px solid var(--border);
-      padding: 32px 0;
+      padding: 24px;
       cursor: pointer;
       transition: all var(--transition-snappy);
       position: relative;
       display: flex;
       flex-direction: column;
+      will-change: transform, background;
+      border-radius: var(--radius-md);
     }
 
     .phrase-card:first-child {
@@ -262,11 +276,14 @@
     }
 
     .phrase-card:hover {
-      background: var(--surface-hover);
-      padding-left: 24px;
-      padding-right: 24px;
-      border-radius: var(--radius-md);
+      background: var(--surface);
       border-bottom-color: transparent;
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+    
+    .phrase-card:active {
+      transform: scale(0.98);
     }
 
     .phrase-header {
@@ -285,10 +302,11 @@
 
     .phrase-english {
       font-size: 20px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-primary);
       line-height: 1.4;
       flex: 1;
+      letter-spacing: -0.01em;
     }
 
     .phrase-detail {
@@ -300,11 +318,15 @@
     }
 
     .phrase-card.expanded {
-      background: var(--surface-hover);
-      padding: 32px 24px;
-      border-radius: var(--radius-md);
+      background: var(--surface);
       border-bottom-color: transparent;
       margin: 12px 0;
+      box-shadow: var(--shadow-hover);
+      transform: none; /* Reset active scale */
+    }
+    
+    .phrase-card.expanded:active {
+      transform: scale(0.99); /* Less squish when expanded */
     }
 
     .phrase-card.expanded .phrase-detail {
@@ -315,7 +337,7 @@
 
     .phrase-native {
       font-size: 28px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--text-primary);
       margin-bottom: 8px;
@@ -325,6 +347,7 @@
       font-size: 16px;
       color: var(--text-secondary);
       margin-bottom: 24px;
+      font-weight: 500;
     }
 
     .phrase-breakdown {
@@ -334,12 +357,12 @@
     }
 
     .word-chip {
-      background: var(--surface);
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       padding: 8px 14px;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 600;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -348,11 +371,12 @@
     .word-chip span {
       font-size: 12px;
       color: var(--text-secondary);
+      font-weight: 500;
     }
 
     /* ─── TIP CARD ─── */
     .tip-card {
-      background: var(--surface-hover);
+      background: var(--surface);
       border-radius: var(--radius-lg);
       padding: 24px 32px;
       margin-top: 48px;
@@ -361,6 +385,7 @@
       display: flex;
       gap: 16px;
       align-items: flex-start;
+      box-shadow: var(--shadow-sm);
     }
 
     .tip-card strong {
@@ -374,7 +399,7 @@
       align-items: center;
       gap: 4px;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
       margin-bottom: 32px;
@@ -396,11 +421,15 @@
     .back-link:hover .chevron {
       transform: translateX(-4px);
     }
+    
+    .back-link:active {
+      transform: scale(0.95);
+    }
 
     .progress-bar {
-      height: 4px;
-      background: var(--surface-hover);
-      border-radius: 2px;
+      height: 6px;
+      background: rgba(0,0,0,0.06);
+      border-radius: 3px;
       margin-bottom: 32px;
       overflow: hidden;
     }
@@ -408,17 +437,18 @@
     .progress-fill {
       height: 100%;
       background: var(--text-primary);
-      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 3px;
+      transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     /* ─── MOBILE ─── */
     @media (max-width: 768px) {
       .header {
-        padding: 20px 20px 0;
+        padding: 16px 16px 0;
       }
 
       .main {
-        padding: 40px 20px 80px;
+        padding: 24px 16px 80px;
       }
 
       .lesson-title {
@@ -444,16 +474,11 @@
       }
 
       .phrase-card {
-        padding: 24px 0;
-      }
-
-      .phrase-card:hover {
-        padding-left: 16px;
-        padding-right: 16px;
+        padding: 20px 16px;
       }
 
       .phrase-card.expanded {
-        padding: 24px 16px;
+        margin: 8px 0;
       }
 
       .phrase-detail {
