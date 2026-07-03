@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/south_indian_language_reader.html"
+    }
+  ]
+}
