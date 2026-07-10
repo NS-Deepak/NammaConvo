@@ -335,16 +335,25 @@
       margin-top: 24px;
     }
 
-    .phrase-native {
-      font-size: 28px;
+    .phrase-script {
+      font-size: 32px;
       font-weight: 700;
-      letter-spacing: -0.02em;
       color: var(--text-primary);
       margin-bottom: 8px;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    .phrase-native {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
     }
 
     .phrase-transliteration {
-      font-size: 16px;
+      font-size: 14px;
       color: var(--text-secondary);
       margin-bottom: 24px;
       font-weight: 500;
@@ -366,6 +375,38 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
+      cursor: pointer;
+      transition: all var(--transition-snappy);
+      user-select: none;
+    }
+
+    .word-chip:hover {
+      background: var(--surface);
+      border-color: var(--text-secondary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .word-chip:active {
+      transform: scale(0.96);
+    }
+
+    @keyframes chip-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1); }
+      70% { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+    }
+
+    .word-chip.speaking {
+      background: var(--text-primary);
+      color: var(--bg);
+      border-color: var(--text-primary);
+      animation: chip-pulse 1.5s infinite;
+    }
+
+    .word-chip.speaking span {
+      color: var(--bg);
+      opacity: 0.8;
     }
 
     .word-chip span {
@@ -439,6 +480,94 @@
       background: var(--text-primary);
       border-radius: 3px;
       transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* ─── AUDIO & TTS STYLE ─── */
+    .lesson-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .lesson-meta-bar .back-link {
+      margin-bottom: 0;
+    }
+
+    .speed-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all var(--transition-snappy);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .speed-toggle-btn:hover {
+      border-color: var(--text-secondary);
+      transform: translateY(-1px);
+    }
+
+    .speed-toggle-btn:active {
+      transform: scale(0.97);
+    }
+
+    .speed-toggle-btn.active {
+      background: var(--text-primary);
+      color: var(--bg);
+      border-color: var(--text-primary);
+    }
+
+    .speaker-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-snappy);
+      margin-left: auto;
+      z-index: 5;
+    }
+
+    .speaker-btn:hover {
+      background: var(--accent-light);
+      color: var(--text-primary);
+      transform: scale(1.1);
+    }
+
+    .speaker-btn:active {
+      transform: scale(0.95);
+    }
+
+    .speaker-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    @keyframes soundwave {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .speaker-btn.speaking {
+      color: var(--text-primary);
+      background: var(--accent-light);
+      animation: soundwave 1.2s infinite ease-in-out;
     }
 
     /* ─── MOBILE ─── */
@@ -522,7 +651,13 @@
     </div>
 
     <div class="view" id="view-lesson">
-      <div class="back-link" onclick="showHome()"><span class="chevron">&#8249;</span> Back</div>
+      <div class="lesson-meta-bar">
+        <div class="back-link" onclick="showHome()"><span class="chevron">&#8249;</span> Back</div>
+        <button class="speed-toggle-btn" id="speed-toggle" onclick="toggleSpeed()" title="Toggle slow pronunciation">
+          <span class="speed-icon">🐢</span>
+          <span class="speed-text">Slow Mode: Off</span>
+        </button>
+      </div>
       <div class="lesson-header">
         <div class="lesson-title" id="lesson-title"></div>
         <div class="lesson-desc" id="lesson-desc"></div>
@@ -544,32 +679,32 @@
             id: 'auto', icon: '🛺', name: 'Auto Driver', count: 10,
             desc: 'When interacting with auto drivers in Bengaluru or other parts of Karnataka, a polite Namaskara saar (Hello, sir) goes a long way.',
             phrases: [
-              { en: 'Will you come to [Location]?', native: '[Location] ge barthira?', roman: 'ge = to · barthira = will you come?', words: [{ w: 'ge', m: 'to' }, { w: 'barthira', m: 'will you come?' }] },
-              { en: 'How much will it cost to go there?', native: 'Alli ge eshtu agutte?', roman: 'Alli = there · eshtu = how much', words: [{ w: 'Alli', m: 'there' }, { w: 'eshtu', m: 'how much' }, { w: 'agutte', m: 'will it be?' }] },
-              { en: 'Please turn on the meter.', native: 'Meter haki, sir.', roman: 'haki = put / turn on', words: [{ w: 'Meter', m: 'meter' }, { w: 'haki', m: 'put/turn on' }] },
-              { en: 'I am standing at the location.', native: 'Location alli nintu kondidini.', roman: 'alli = at · nintu kondidini = standing', words: [{ w: 'alli', m: 'at / there' }, { w: 'nintu', m: 'standing' }, { w: 'kondidini', m: 'I am' }] },
-              { en: 'Can you show the scanner / QR code?', native: 'Scanner thoristhira?', roman: 'thoristhira = will you show?', words: [{ w: 'thoristhira', m: 'will you show?' }] },
-              { en: 'Please go straight, then take a left.', native: 'Straight hogi, aamele left thagolli.', roman: 'hogi = go · aamele = then · thagolli = take', words: [{ w: 'hogi', m: 'go' }, { w: 'aamele', m: 'then' }, { w: 'thagolli', m: 'take' }] },
-              { en: 'Please drive a little slower.', native: 'Swalpa mellage hogi.', roman: 'Swalpa = a little · mellage = slow', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'mellage', m: 'slowly' }, { w: 'hogi', m: 'go' }] },
-              { en: 'I am getting late, please go a bit fast.', native: 'Nange late aagthide, swalpa bega hogi.', roman: 'bega = fast · Nange = to me', words: [{ w: 'Nange', m: 'to me' }, { w: 'bega', m: 'fast' }, { w: 'hogi', m: 'go' }] },
-              { en: 'Please stop right here.', native: 'Illi nillisi.', roman: 'Illi = here · nillisi = stop', words: [{ w: 'Illi', m: 'here' }, { w: 'nillisi', m: 'stop' }] },
-              { en: 'Do you have change for 500 rupees?', native: 'Iynoornu (500) rupayi ge change idya?', roman: 'idya = do you have?', words: [{ w: 'Iynoornu (500)', m: '500' }, { w: 'rupayi', m: 'rupees' }, { w: 'idya', m: 'do you have?' }] },
+              { en: 'Will you come to [Location]?', native: '[Location] ge barthira?', script: '[Location] ಗೆ ಬರ್ತೀರಾ?', roman: 'ge = to · barthira = will you come?', words: [{ w: 'ge', m: 'to' }, { w: 'barthira', m: 'will you come?' }] },
+              { en: 'How much will it cost to go there?', native: 'Alli ge eshtu agutte?', script: 'ಅಲ್ಲಿಗೆ ಎಷ್ಟು ಆಗುತ್ತೆ?', roman: 'Alli = there · eshtu = how much', words: [{ w: 'Alli', m: 'there' }, { w: 'eshtu', m: 'how much' }, { w: 'agutte', m: 'will it be?' }] },
+              { en: 'Please turn on the meter.', native: 'Meter haki, sir.', script: 'ಮೀಟರ್ ಹಾಕಿ, ಸರ್.', roman: 'haki = put / turn on', words: [{ w: 'Meter', m: 'meter' }, { w: 'haki', m: 'put/turn on' }] },
+              { en: 'I am standing at the location.', native: 'Location alli nintu kondidini.', script: 'ಲೊಕೇಶನ್ ಅಲ್ಲಿ ನಿಂತು ಕೊಂಡಿದ್ದೀನಿ.', roman: 'alli = at · nintu kondidini = standing', words: [{ w: 'alli', m: 'at / there' }, { w: 'nintu', m: 'standing' }, { w: 'kondidini', m: 'I am' }] },
+              { en: 'Can you show the scanner / QR code?', native: 'Scanner thoristhira?', script: 'ಸ್ಕ್ಯಾನರ್ ತೋರಿಸ್ತೀರಾ?', roman: 'thoristhira = will you show?', words: [{ w: 'thoristhira', m: 'will you show?' }] },
+              { en: 'Please go straight, then take a left.', native: 'Straight hogi, aamele left thagolli.', script: 'ಸ್ಟ್ರೈಟ್ ಹೋಗಿ, ಆಮೇಲೆ ಲೆಫ್ಟ್ ತಗೊಳ್ಳಿ.', roman: 'hogi = go · aamele = then · thagolli = take', words: [{ w: 'hogi', m: 'go' }, { w: 'aamele', m: 'then' }, { w: 'thagolli', m: 'take' }] },
+              { en: 'Please drive a little slower.', native: 'Swalpa mellage hogi.', script: 'ಸ್ವಲ್ಪ ಮೆಲ್ಲಗೆ ಹೋಗಿ.', roman: 'Swalpa = a little · mellage = slow', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'mellage', m: 'slowly' }, { w: 'hogi', m: 'go' }] },
+              { en: 'I am getting late, please go a bit fast.', native: 'Nange late aagthide, swalpa bega hogi.', script: 'ನನಗೆ ಲೇറ്റ് ಆಗ್तಿದೆ, ಸ್ವಲ್ಪ ಬೇഗ ಹೋಗಿ.', roman: 'bega = fast · Nange = to me', words: [{ w: 'Nange', m: 'to me' }, { w: 'bega', m: 'fast' }, { w: 'hogi', m: 'go' }] },
+              { en: 'Please stop right here.', native: 'Illi nillisi.', script: 'ಇಲ್ಲಿ ನಿಲ್ಲಿಸಿ.', roman: 'Illi = here · nillisi = stop', words: [{ w: 'Illi', m: 'here' }, { w: 'nillisi', m: 'stop' }] },
+              { en: 'Do you have change for 500 rupees?', native: 'Iynoornu (500) rupayi ge change idya?', script: 'ಐನೂರು ರೂಪಾಯಿಗೆ ಚೇಂಜ್ ಇದ್ಯಾ?', roman: 'idya = do you have?', words: [{ w: 'Iynoornu (500)', m: '500' }, { w: 'rupayi', m: 'rupees' }, { w: 'idya', m: 'do you have?' }] },
             ]
           },
           {
             id: 'hotel', icon: '🍽️', name: 'Restaurant', count: 10,
             desc: 'Food is a massive part of the culture, and knowing how to order and compliment the food will instantly win you smiles.',
             phrases: [
-              { en: 'Do you have a table for two?', native: 'Ibbarige table idya?', roman: 'Ibbarige = for two people · idya = do you have?', words: [{ w: 'Ibbarige', m: 'for two' }, { w: 'idya', m: 'do you have?' }] },
-              { en: 'Please give me the menu.', native: 'Menu kodi.', roman: 'kodi = give (polite)', words: [{ w: 'kodi', m: 'give (polite)' }] },
-              { en: 'What is today\'s special?', native: 'Ivattu special enu?', roman: 'Ivattu = today · enu = what', words: [{ w: 'Ivattu', m: 'today' }, { w: 'special', m: 'special' }, { w: 'enu', m: 'what?' }] },
-              { en: 'Give me one plate Idli and one Coffee.', native: 'Ondu plate idli mathu ondu coffee kodi.', roman: 'Ondu = one · mathu = and · kodi = give', words: [{ w: 'Ondu', m: 'one' }, { w: 'mathu', m: 'and' }, { w: 'kodi', m: 'give' }] },
-              { en: 'Please give us some drinking water.', native: 'Kudiyoke neeru kodi.', roman: 'Kudiyoke = for drinking · neeru = water', words: [{ w: 'Kudiyoke', m: 'to drink' }, { w: 'neeru', m: 'water' }, { w: 'kodi', m: 'give' }] },
-              { en: 'Make it a little spicy, please.', native: 'Swalpa khara madi.', roman: 'khara = spicy · madi = make/do', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'khara', m: 'spicy' }, { w: 'madi', m: 'make/do' }] },
-              { en: 'Where is the washroom?', native: 'Washroom elli ide?', roman: 'elli ide = where is it?', words: [{ w: 'elli', m: 'where' }, { w: 'ide', m: 'is it?' }] },
-              { en: 'The food is very good!', native: 'Oota tumba chennagide!', roman: 'Oota = food · tumba = very · chennagide = nice', words: [{ w: 'Oota', m: 'food' }, { w: 'tumba', m: 'very' }, { w: 'chennagide', m: 'it is nice' }] },
-              { en: 'Please bring the bill.', native: 'Bill kodi.', roman: 'kodi = give (polite)', words: [{ w: 'Bill', m: 'bill' }, { w: 'kodi', m: 'give' }] },
-              { en: 'I will pay using Google Pay / PhonePe.', native: 'Naanu G-pay/PhonePe alli pay madthini.', roman: 'Naanu = I · alli = using', words: [{ w: 'Naanu', m: 'I' }, { w: 'alli', m: 'using' }, { w: 'madthini', m: 'will do' }] },
+              { en: 'Do you have a table for two?', native: 'Ibbarige table idya?', script: 'ಇಬ್ಬರಿಗೆ ಟೇಬಲ್ ಇದ್ಯಾ?', roman: 'Ibbarige = for two people · idya = do you have?', words: [{ w: 'Ibbarige', m: 'for two' }, { w: 'idya', m: 'do you have?' }] },
+              { en: 'Please give me the menu.', native: 'Menu kodi.', script: 'ಮೆನು ಕೊಡಿ.', roman: 'kodi = give (polite)', words: [{ w: 'kodi', m: 'give (polite)' }] },
+              { en: 'What is today\'s special?', native: 'Ivattu special enu?', script: 'ಇವತ್ತು ಸ್ಪೆಷಲ್ ಏನು?', roman: 'Ivattu = today · enu = what', words: [{ w: 'Ivattu', m: 'today' }, { w: 'special', m: 'special' }, { w: 'enu', m: 'what?' }] },
+              { en: 'Give me one plate Idli and one Coffee.', native: 'Ondu plate idli mathu ondu coffee kodi.', script: 'ಒಂದು ಪ್ಲೇಟ್ ಇಡ್ಲಿ ಮತ್ತು ಒಂದು ಕಾಫಿ ಕೊಡಿ.', roman: 'Ondu = one · mathu = and · kodi = give', words: [{ w: 'Ondu', m: 'one' }, { w: 'mathu', m: 'and' }, { w: 'kodi', m: 'give' }] },
+              { en: 'Please give us some drinking water.', native: 'Kudiyoke neeru kodi.', script: 'ಕುಡಿಯೋಕೆ ನೀರು ಕೊಡಿ.', roman: 'Kudiyoke = for drinking · neeru = water', words: [{ w: 'Kudiyoke', m: 'to drink' }, { w: 'neeru', m: 'water' }, { w: 'kodi', m: 'give' }] },
+              { en: 'Make it a little spicy, please.', native: 'Swalpa khara madi.', script: 'ಸ್ವಲ್ಪ ಖಾರ ಮಾಡಿ.', roman: 'khara = spicy · madi = make/do', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'khara', m: 'spicy' }, { w: 'madi', m: 'make/do' }] },
+              { en: 'Where is the washroom?', native: 'Washroom elli ide?', script: 'ವಾಶ್ರೂಮ್ ಎಲ್ಲಿದೆ?', roman: 'elli ide = where is it?', words: [{ w: 'elli', m: 'where' }, { w: 'ide', m: 'is it?' }] },
+              { en: 'The food is very good!', native: 'Oota tumba chennagide!', script: 'ಊಟ ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ!', roman: 'Oota = food · tumba = very · chennagide = nice', words: [{ w: 'Oota', m: 'food' }, { w: 'tumba', m: 'very' }, { w: 'chennagide', m: 'it is nice' }] },
+              { en: 'Please bring the bill.', native: 'Bill kodi.', script: 'ಬಿಲ್ ಕೊಡಿ.', roman: 'kodi = give (polite)', words: [{ w: 'Bill', m: 'bill' }, { w: 'kodi', m: 'give' }] },
+              { en: 'I will pay using Google Pay / PhonePe.', native: 'Naanu G-pay/PhonePe alli pay madthini.', script: 'ನಾನು ಜಿ-ಪೇ/ಫೋನ್-ಪേ ಅಲ್ಲಿ ಪೇ ಮಾಡ್ತೀನಿ.', roman: 'Naanu = I · alli = using', words: [{ w: 'Naanu', m: 'I' }, { w: 'alli', m: 'using' }, { w: 'madthini', m: 'will do' }] },
             ]
           }
         ]
@@ -582,32 +717,32 @@
             id: 'auto', icon: '🛺', name: 'Auto Driver', count: 10,
             desc: 'Essential phrases for getting around Chennai and Tamil Nadu by auto.',
             phrases: [
-              { en: 'Will you come to [Location]?', native: '[Location] varuveenga?', roman: 'varuveenga = will you come? (polite)', words: [{ w: 'varuveenga', m: 'will you come?' }] },
-              { en: 'How much will it cost to go there?', native: 'Anga poga evvalavu aagum?', roman: 'Anga = there · poga = to go · evvalavu = how much', words: [{ w: 'Anga', m: 'there' }, { w: 'evvalavu', m: 'how much' }, { w: 'aagum', m: 'will be' }] },
-              { en: 'Please turn on the meter.', native: 'Meter podunga.', roman: 'podunga = put/turn on', words: [{ w: 'Meter', m: 'meter' }, { w: 'podunga', m: 'turn on' }] },
-              { en: 'I am standing at the location.', native: 'Location-la ninnutu iruken.', roman: 'la = at · ninnutu = standing · iruken = I am', words: [{ w: 'Location-la', m: 'at location' }, { w: 'ninnutu', m: 'standing' }, { w: 'iruken', m: 'I am' }] },
-              { en: 'Can you show the scanner / QR code?', native: 'Scanner kaamipingala?', roman: 'kaamipingala = will you show?', words: [{ w: 'Scanner', m: 'scanner' }, { w: 'kaamipingala', m: 'will you show?' }] },
-              { en: 'Please go straight, then take a left.', native: 'Nere ponga, apram left edunga.', roman: 'Nere = straight · apram = then · edunga = take', words: [{ w: 'Nere', m: 'straight' }, { w: 'apram', m: 'then' }, { w: 'edunga', m: 'take' }] },
-              { en: 'Please drive a little slower.', native: 'Konjam methuva ponga.', roman: 'Konjam = a little · methuva = slowly', words: [{ w: 'Konjam', m: 'a little' }, { w: 'methuva', m: 'slowly' }, { w: 'ponga', m: 'go' }] },
-              { en: 'I am getting late, please go a bit fast.', native: 'Enaku late aaguthu, konjam fast-a ponga.', roman: 'Enaku = to me · late aaguthu = getting late · fast-a = fast', words: [{ w: 'Enaku', m: 'to me' }, { w: 'late aaguthu', m: 'getting late' }, { w: 'konjam', m: 'a little' }, { w: 'ponga', m: 'go' }] },
-              { en: 'Please stop right here.', native: 'Inga niruthunga.', roman: 'Inga = here · niruthunga = please stop', words: [{ w: 'Inga', m: 'here' }, { w: 'niruthunga', m: 'stop' }] },
-              { en: 'Do you have change for 500 rupees?', native: 'Aiynooru (500) ruba ku change irukka?', roman: 'ruba ku = for rupees · irukka = do you have?', words: [{ w: 'Aiynooru (500)', m: '500' }, { w: 'ruba', m: 'rupees' }, { w: 'irukka', m: 'do you have?' }] },
+              { en: 'Will you come to [Location]?', native: '[Location] varuveenga?', script: '[Location] வருவீங்களா?', roman: 'varuveenga = will you come? (polite)', words: [{ w: 'varuveenga', m: 'will you come?' }] },
+              { en: 'How much will it cost to go there?', native: 'Anga poga evvalavu aagum?', script: 'அங்க போக எவ்வளவு ஆகும்?', roman: 'Anga = there · poga = to go · evvalavu = how much', words: [{ w: 'Anga', m: 'there' }, { w: 'evvalavu', m: 'how much' }, { w: 'aagum', m: 'will be' }] },
+              { en: 'Please turn on the meter.', native: 'Meter podunga.', script: 'மீட்டர் போடுங்க.', roman: 'podunga = put/turn on', words: [{ w: 'Meter', m: 'meter' }, { w: 'podunga', m: 'turn on' }] },
+              { en: 'I am standing at the location.', native: 'Location-la ninnutu iruken.', script: 'லொகேஷன்ல நின்னுட்டு இருக்கேன்.', roman: 'la = at · ninnutu = standing · iruken = I am', words: [{ w: 'Location-la', m: 'at location' }, { w: 'ninnutu', m: 'standing' }, { w: 'iruken', m: 'I am' }] },
+              { en: 'Can you show the scanner / QR code?', native: 'Scanner kaamipingala?', script: 'ஸ்கேனர் காமிப்பீங்களா?', roman: 'kaamipingala = will you show?', words: [{ w: 'Scanner', m: 'scanner' }, { w: 'kaamipingala', m: 'will you show?' }] },
+              { en: 'Please go straight, then take a left.', native: 'Nere ponga, apram left edunga.', script: 'நேரா போங்க, அப்புறம் லெஃப்ட் எடுங்க.', roman: 'Nere = straight · apram = then · edunga = take', words: [{ w: 'Nere', m: 'straight' }, { w: 'apram', m: 'then' }, { w: 'edunga', m: 'take' }] },
+              { en: 'Please drive a little slower.', native: 'Konjam methuva ponga.', script: 'கொஞ்சம் மெதுவா போங்க.', roman: 'Konjam = a little · methuva = slowly', words: [{ w: 'Konjam', m: 'a little' }, { w: 'methuva', m: 'slowly' }, { w: 'ponga', m: 'go' }] },
+              { en: 'I am getting late, please go a bit fast.', native: 'Enaku late aaguthu, konjam fast-a ponga.', script: 'எனക്ക് லேட் ஆகுது, கொஞ்சம் ஃபாஸ்ட்டா போங்க.', roman: 'Enaku = to me · late aaguthu = getting late · fast-a = fast', words: [{ w: 'Enaku', m: 'to me' }, { w: 'late aaguthu', m: 'getting late' }, { w: 'konjam', m: 'a little' }, { w: 'ponga', m: 'go' }] },
+              { en: 'Please stop right here.', native: 'Inga niruthunga.', script: 'இங்க நிறுத்துங்க.', roman: 'Inga = here · niruthunga = please stop', words: [{ w: 'Inga', m: 'here' }, { w: 'niruthunga', m: 'stop' }] },
+              { en: 'Do you have change for 500 rupees?', native: 'Aiynooru (500) ruba ku change irukka?', script: 'ஐந்நூறு ரூபாய்க்கு சேஞ்ச் இருக்கா?', roman: 'ruba ku = for rupees · irukka = do you have?', words: [{ w: 'Aiynooru (500)', m: '500' }, { w: 'ruba', m: 'rupees' }, { w: 'irukka', m: 'do you have?' }] },
             ]
           },
           {
             id: 'food', icon: '🍽️', name: 'Restaurant', count: 10,
             desc: 'Order food and compliment the cook in Tamil.',
             phrases: [
-              { en: 'Do you have a table for two?', native: 'Rendu peruku table irukka?', roman: 'Rendu = two · peruku = for people · irukka = is there?', words: [{ w: 'Rendu', m: 'two' }, { w: 'peruku', m: 'for people' }, { w: 'irukka', m: 'is there?' }] },
-              { en: 'Please give me the menu.', native: 'Menu kudunga.', roman: 'kudunga = give (polite)', words: [{ w: 'Menu', m: 'menu' }, { w: 'kudunga', m: 'give' }] },
-              { en: 'What is today\'s special?', native: 'Inniku special enna?', roman: 'Inniku = today · enna = what', words: [{ w: 'Inniku', m: 'today' }, { w: 'special', m: 'special' }, { w: 'enna', m: 'what?' }] },
-              { en: 'Give me one plate Idli and one Coffee.', native: 'Oru plate idli mattum oru coffee kudunga.', roman: 'Oru = one · mattum = and · kudunga = give', words: [{ w: 'Oru', m: 'one' }, { w: 'mattum', m: 'and' }, { w: 'kudunga', m: 'give' }] },
-              { en: 'Please give us some drinking water.', native: 'Kudikka konjam thanni kudunga.', roman: 'Kudikka = to drink · thanni = water', words: [{ w: 'Kudikka', m: 'to drink' }, { w: 'thanni', m: 'water' }, { w: 'kudunga', m: 'give' }] },
-              { en: 'Make it a little spicy, please.', native: 'Konjam karama podunga.', roman: 'karama = spicy · podunga = make/put', words: [{ w: 'Konjam', m: 'a little' }, { w: 'karama', m: 'spicy' }, { w: 'podunga', m: 'make' }] },
-              { en: 'Where is the washroom?', native: 'Washroom enga irukku?', roman: 'enga = where · irukku = is?', words: [{ w: 'enga', m: 'where' }, { w: 'irukku', m: 'is' }] },
-              { en: 'The food is very good!', native: 'Saapadu romba nalla irukku!', roman: 'Saapadu = food · romba = very · nalla irukku = is good', words: [{ w: 'Saapadu', m: 'food' }, { w: 'romba', m: 'very' }, { w: 'nalla irukku', m: 'is good' }] },
-              { en: 'Please bring the bill.', native: 'Bill kondu vanga.', roman: 'kondu vanga = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'kondu vanga', m: 'please bring' }] },
-              { en: 'I will pay using Google Pay / PhonePe.', native: 'Naan G-pay/PhonePe la pay panren.', roman: 'Naan = I · la = using/in · pay panren = will pay', words: [{ w: 'Naan', m: 'I' }, { w: 'la', m: 'using' }, { w: 'pay panren', m: 'will pay' }] },
+              { en: 'Do you have a table for two?', native: 'Rendu peruku table irukka?', script: 'ரெண்டு பேருக்கு டேபிள் இருக்கா?', roman: 'Rendu = two · peruku = for people · irukka = is there?', words: [{ w: 'Rendu', m: 'two' }, { w: 'peruku', m: 'for people' }, { w: 'irukka', m: 'is there?' }] },
+              { en: 'Please give me the menu.', native: 'Menu kudunga.', script: 'மெனு குடுங்க.', roman: 'kudunga = give (polite)', words: [{ w: 'Menu', m: 'menu' }, { w: 'kudunga', m: 'give' }] },
+              { en: 'What is today\'s special?', native: 'Inniku special enna?', script: 'இன்னைக்கு ஸ்பெஷல் என்ன?', roman: 'Inniku = today · enna = what', words: [{ w: 'Inniku', m: 'today' }, { w: 'special', m: 'special' }, { w: 'enna', m: 'what?' }] },
+              { en: 'Give me one plate Idli and one Coffee.', native: 'Oru plate idli mattum oru coffee kudunga.', script: 'ஒரு பிளேட் இட்லி மற்றும் ஒரு காபி குடுங்க.', roman: 'Oru = one · mattum = and · kudunga = give', words: [{ w: 'Oru', m: 'one' }, { w: 'mattum', m: 'and' }, { w: 'kudunga', m: 'give' }] },
+              { en: 'Please give us some drinking water.', native: 'Kudikka konjam thanni kudunga.', script: 'குடிக்க கொஞ்சம் தண்ணி குடுங்க.', roman: 'Kudikka = to drink · thanni = water', words: [{ w: 'Kudikka', m: 'to drink' }, { w: 'thanni', m: 'water' }, { w: 'kudunga', m: 'give' }] },
+              { en: 'Make it a little spicy, please.', native: 'Konjam karama podunga.', script: 'கொஞ்சம் காரமா போடுங்க.', roman: 'karama = spicy · podunga = make/put', words: [{ w: 'Konjam', m: 'a little' }, { w: 'karama', m: 'spicy' }, { w: 'podunga', m: 'make' }] },
+              { en: 'Where is the washroom?', native: 'Washroom enga irukku?', script: 'வாஷ்ரூம் எங்க இருக்கு?', roman: 'enga = where · irukku = is?', words: [{ w: 'enga', m: 'where' }, { w: 'irukku', m: 'is' }] },
+              { en: 'The food is very good!', native: 'Saapadu romba nalla irukku!', script: 'சாப்பாடு ரொம்ப நல்லா இருக்கு!', roman: 'Saapadu = food · romba = very · nalla irukku = is good', words: [{ w: 'Saapadu', m: 'food' }, { w: 'romba', m: 'very' }, { w: 'nalla irukku', m: 'is good' }] },
+              { en: 'Please bring the bill.', native: 'Bill kondu vanga.', script: 'பில் கொண்டு வாங்க.', roman: 'kondu vanga = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'kondu vanga', m: 'please bring' }] },
+              { en: 'I will pay using Google Pay / PhonePe.', native: 'Naan G-pay/PhonePe la pay panren.', script: 'நான் ஜி-பே/போன்பே ல பே பண்றேன்.', roman: 'Naan = I · la = using/in · pay panren = will pay', words: [{ w: 'Naan', m: 'I' }, { w: 'la', m: 'using' }, { w: 'pay panren', m: 'will pay' }] },
             ]
           }
         ]
@@ -620,22 +755,22 @@
             id: 'auto', icon: '🛺', name: 'Auto Driver', count: 5,
             desc: 'Get around Hyderabad and Vijayawada with these basics.',
             phrases: [
-              { en: 'Will you come to [Location]?', native: '[Location] ki vastara?', roman: 'ki = to · vastara = will you come?', words: [{ w: 'ki', m: 'to' }, { w: 'vastara', m: 'will you come?' }] },
-              { en: 'How much is the fare?', native: 'Chargelu entha?', roman: 'Chargelu = charge/fare · entha = how much?', words: [{ w: 'Chargelu', m: 'fare' }, { w: 'entha', m: 'how much?' }] },
-              { en: 'Please go straight.', native: 'Straight pampinchu.', roman: 'pampinchu = send / go forward', words: [{ w: 'Straight', m: 'straight' }, { w: 'pampinchu', m: 'go forward' }] },
-              { en: 'Stop here.', native: 'Ikkade aapandi.', roman: 'Ikkade = here · aapandi = please stop', words: [{ w: 'Ikkade', m: 'here' }, { w: 'aapandi', m: 'please stop' }] },
-              { en: 'Please go a little slow.', native: 'Koddiga mellaga velandi.', roman: 'Koddiga = a little · mellaga = slowly', words: [{ w: 'Koddiga', m: 'a little' }, { w: 'mellaga', m: 'slowly' }, { w: 'velandi', m: 'please go' }] },
+              { en: 'Will you come to [Location]?', native: '[Location] ki vastara?', script: '[Location] కి వస్తారా?', roman: 'ki = to · vastara = will you come?', words: [{ w: 'ki', m: 'to' }, { w: 'vastara', m: 'will you come?' }] },
+              { en: 'How much is the fare?', native: 'Chargelu entha?', script: 'చార్జీలు ఎంత?', roman: 'Chargelu = charge/fare · entha = how much?', words: [{ w: 'Chargelu', m: 'fare' }, { w: 'entha', m: 'how much?' }] },
+              { en: 'Please go straight.', native: 'Straight pampinchu.', script: 'స్ట్రెయిట్ వెళ్ళండి.', roman: 'pampinchu = send / go forward', words: [{ w: 'Straight', m: 'straight' }, { w: 'pampinchu', m: 'go forward' }] },
+              { en: 'Stop here.', native: 'Ikkade aapandi.', script: 'ఇక్కడే ఆపండి.', roman: 'Ikkade = here · aapandi = please stop', words: [{ w: 'Ikkade', m: 'here' }, { w: 'aapandi', m: 'please stop' }] },
+              { en: 'Please go a little slow.', native: 'Koddiga mellaga velandi.', script: 'కొద్దిగా మెల్లగా వెళ్ళండి.', roman: 'Koddiga = a little · mellaga = slowly', words: [{ w: 'Koddiga', m: 'a little' }, { w: 'mellaga', m: 'slowly' }, { w: 'velandi', m: 'please go' }] },
             ]
           },
           {
             id: 'food', icon: '🍽️', name: 'Restaurant', count: 5,
             desc: 'Order meals and connect with locals over the famous Telugu cuisine.',
             phrases: [
-              { en: 'Give me one plate rice.', native: 'Okka plate annamu ivvandi.', roman: 'Okka = one · annamu = rice · ivvandi = please give', words: [{ w: 'Okka', m: 'one' }, { w: 'annamu', m: 'rice/meal' }, { w: 'ivvandi', m: 'please give' }] },
-              { en: 'Give me some water.', native: 'Koddiga neellu ivvandi.', roman: 'neellu = water · ivvandi = please give', words: [{ w: 'Koddiga', m: 'some' }, { w: 'neellu', m: 'water' }, { w: 'ivvandi', m: 'please give' }] },
-              { en: 'The food is very tasty!', native: 'Vanta chala bavundi!', roman: 'Vanta = food · chala = very · bavundi = good', words: [{ w: 'Vanta', m: 'food' }, { w: 'chala', m: 'very' }, { w: 'bavundi', m: 'good' }] },
-              { en: 'Please bring the bill.', native: 'Bill teesukurandi.', roman: 'teesukurandi = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'teesukurandi', m: 'please bring' }] },
-              { en: 'Where is the washroom?', native: 'Rest room ekkada undi?', roman: 'ekkada = where · undi = is it?', words: [{ w: 'ekkada', m: 'where' }, { w: 'undi', m: 'is it?' }] },
+              { en: 'Give me one plate rice.', native: 'Okka plate annamu ivvandi.', script: 'ఒక్క ప్లేట్ అన్నం ఇవ్వండి.', roman: 'Okka = one · annamu = rice · ivvandi = please give', words: [{ w: 'Okka', m: 'one' }, { w: 'annamu', m: 'rice/meal' }, { w: 'ivvandi', m: 'please give' }] },
+              { en: 'Give me some water.', native: 'Koddiga neellu ivvandi.', script: 'కొద్దిగా నీళ్ళు ఇవ్వండి.', roman: 'neellu = water · ivvandi = please give', words: [{ w: 'Koddiga', m: 'some' }, { w: 'neellu', m: 'water' }, { w: 'ivvandi', m: 'please give' }] },
+              { en: 'The food is very tasty!', native: 'Vanta chala bavundi!', script: 'వంట చాలా బాగుంది!', roman: 'Vanta = food · chala = very · bavundi = good', words: [{ w: 'Vanta', m: 'food' }, { w: 'chala', m: 'very' }, { w: 'bavundi', m: 'good' }] },
+              { en: 'Please bring the bill.', native: 'Bill teesukurandi.', script: 'బిల్ తీసుకురండి.', roman: 'teesukurandi = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'teesukurandi', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Rest room ekkada undi?', script: 'రెస్ట్ రూమ్ ఎక్కడ ఉంది?', roman: 'ekkada = where · undi = is it?', words: [{ w: 'ekkada', m: 'where' }, { w: 'undi', m: 'is it?' }] },
             ]
           }
         ]
@@ -648,22 +783,22 @@
             id: 'auto', icon: '🛺', name: 'Auto / Cab Driver', count: 5,
             desc: 'Navigate Delhi, Mumbai, and other cities with confidence.',
             phrases: [
-              { en: 'Will you go to [Location]?', native: '[Location] chaloge?', roman: 'chaloge = will you go? (informal)', words: [{ w: 'chaloge', m: 'will you go?' }] },
-              { en: 'How much will it cost?', native: 'Kitna lagega?', roman: 'Kitna = how much · lagega = will it be?', words: [{ w: 'Kitna', m: 'how much' }, { w: 'lagega', m: 'will it cost?' }] },
-              { en: 'Please go straight.', native: 'Seedha chaliye.', roman: 'Seedha = straight · chaliye = please go', words: [{ w: 'Seedha', m: 'straight' }, { w: 'chaliye', m: 'please go' }] },
-              { en: 'Stop here please.', native: 'Yahan rokiye.', roman: 'Yahan = here · rokiye = please stop', words: [{ w: 'Yahan', m: 'here' }, { w: 'rokiye', m: 'please stop' }] },
-              { en: 'Please drive a little slowly.', native: 'Thoda dheere chaliye.', roman: 'Thoda = a little · dheere = slowly', words: [{ w: 'Thoda', m: 'a little' }, { w: 'dheere', m: 'slowly' }, { w: 'chaliye', m: 'please go' }] },
+              { en: 'Will you go to [Location]?', native: '[Location] chaloge?', script: '[Location] चलोगे?', roman: 'chaloge = will you go? (informal)', words: [{ w: 'chaloge', m: 'will you go?' }] },
+              { en: 'How much will it cost?', native: 'Kitna lagega?', script: 'कितना लगेगा?', roman: 'Kitna = how much · lagega = will it be?', words: [{ w: 'Kitna', m: 'how much' }, { w: 'lagega', m: 'will it cost?' }] },
+              { en: 'Please go straight.', native: 'Seedha chaliye.', script: 'सीधा चलिए।', roman: 'Seedha = straight · chaliye = please go', words: [{ w: 'Seedha', m: 'straight' }, { w: 'chaliye', m: 'please go' }] },
+              { en: 'Stop here please.', native: 'Yahan rokiye.', script: 'यहाँ रोकिए।', roman: 'Yahan = here · rokiye = please stop', words: [{ w: 'Yahan', m: 'here' }, { w: 'rokiye', m: 'please stop' }] },
+              { en: 'Please drive a little slowly.', native: 'Thoda dheere chaliye.', script: 'थोड़ा धीरे चलिए।', roman: 'Thoda = a little · dheere = slowly', words: [{ w: 'Thoda', m: 'a little' }, { w: 'dheere', m: 'slowly' }, { w: 'chaliye', m: 'please go' }] },
             ]
           },
           {
             id: 'food', icon: '🍽️', name: 'Restaurant / Dhaba', count: 5,
             desc: 'Order meals, ask for water, and compliment the khana.',
             phrases: [
-              { en: 'Give me one plate rice.', native: 'Ek plate chawal dena.', roman: 'Ek = one · chawal = rice · dena = give', words: [{ w: 'Ek', m: 'one' }, { w: 'chawal', m: 'rice' }, { w: 'dena', m: 'give' }] },
-              { en: 'Please give me some water.', native: 'Thoda paani dena.', roman: 'Thoda = some · paani = water', words: [{ w: 'Thoda', m: 'some' }, { w: 'paani', m: 'water' }, { w: 'dena', m: 'give' }] },
-              { en: 'The food is very delicious!', native: 'Khana bahut achha hai!', roman: 'Khana = food · bahut = very · achha = good', words: [{ w: 'Khana', m: 'food' }, { w: 'bahut', m: 'very' }, { w: 'achha', m: 'good' }] },
-              { en: 'Please bring the bill.', native: 'Bill lana.', roman: 'lana = bring (please)', words: [{ w: 'Bill', m: 'bill' }, { w: 'lana', m: 'please bring' }] },
-              { en: 'Where is the washroom?', native: 'Washroom kahan hai?', roman: 'kahan = where · hai = is?', words: [{ w: 'kahan', m: 'where' }, { w: 'hai', m: 'is?' }] },
+              { en: 'Give me one plate rice.', native: 'Ek plate chawal dena.', script: 'एक प्लेट चावल देना।', roman: 'Ek = one · chawal = rice · dena = give', words: [{ w: 'Ek', m: 'one' }, { w: 'chawal', m: 'rice' }, { w: 'dena', m: 'give' }] },
+              { en: 'Please give me some water.', native: 'Thoda paani dena.', script: 'थोड़ा पानी देना।', roman: 'Thoda = some · paani = water', words: [{ w: 'Thoda', m: 'some' }, { w: 'paani', m: 'water' }, { w: 'dena', m: 'give' }] },
+              { en: 'The food is very delicious!', native: 'Khana bahut achha hai!', script: 'खाना बहुत अच्छा है!', roman: 'Khana = food · bahut = very · achha = good', words: [{ w: 'Khana', m: 'food' }, { w: 'bahut', m: 'very' }, { w: 'achha', m: 'good' }] },
+              { en: 'Please bring the bill.', native: 'Bill lana.', script: 'बिल लाना।', roman: 'lana = bring (please)', words: [{ w: 'Bill', m: 'bill' }, { w: 'lana', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Washroom kahan hai?', script: 'वॉशरुम कहाँ है?', roman: 'kahan = where · hai = is?', words: [{ w: 'kahan', m: 'where' }, { w: 'hai', m: 'is?' }] },
             ]
           }
         ]
@@ -676,22 +811,22 @@
             id: 'auto', icon: '🛺', name: 'Auto Driver', count: 5,
             desc: 'Get around Kochi, Thiruvananthapuram, and Calicut with these basics.',
             phrases: [
-              { en: 'Will you come to [Location]?', native: '[Location] varumo?', roman: 'varumo = will you come?', words: [{ w: 'varumo', m: 'will you come?' }] },
-              { en: 'How much will it cost?', native: 'Ethra aaagum?', roman: 'Ethra = how much · aagum = will be', words: [{ w: 'Ethra', m: 'how much' }, { w: 'aagum', m: 'will be' }] },
-              { en: 'Please go straight.', native: 'Nerey poko.', roman: 'Nerey = straight · poko = go', words: [{ w: 'Nerey', m: 'straight' }, { w: 'poko', m: 'go' }] },
-              { en: 'Stop here please.', native: 'Ithuvide nilkku.', roman: 'Ithuvide = here · nilkku = stop', words: [{ w: 'Ithuvide', m: 'here' }, { w: 'nilkku', m: 'stop' }] },
-              { en: 'Please go a little slow.', native: 'Swalpa pahuthi poko.', roman: 'Swalpa = a little · pahuthi = slowly', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'pahuthi', m: 'slowly' }, { w: 'poko', m: 'go' }] },
+              { en: 'Will you come to [Location]?', native: '[Location] varumo?', script: '[Location] വരുമോ?', roman: 'varumo = will you come?', words: [{ w: 'varumo', m: 'will you come?' }] },
+              { en: 'How much will it cost?', native: 'Ethra aaagum?', script: 'എത്രയാകും?', roman: 'Ethra = how much · aagum = will be', words: [{ w: 'Ethra', m: 'how much' }, { w: 'aagum', m: 'will be' }] },
+              { en: 'Please go straight.', native: 'Nerey poko.', script: 'നേരെ പൊയ്ക്കോളൂ.', roman: 'Nerey = straight · poko = go', words: [{ w: 'Nerey', m: 'straight' }, { w: 'poko', m: 'go' }] },
+              { en: 'Stop here please.', native: 'Ithuvide nilkku.', script: 'ഇവിടെ നിർത്തൂ.', roman: 'Ithuvide = here · nilkku = stop', words: [{ w: 'Ithuvide', m: 'here' }, { w: 'nilkku', m: 'stop' }] },
+              { en: 'Please go a little slow.', native: 'Swalpa pahuthi poko.', script: 'Swalpa = a little · pahuthi = slowly', roman: 'Swalpa = a little · pahuthi = slowly', words: [{ w: 'Swalpa', m: 'a little' }, { w: 'pahuthi', m: 'slowly' }, { w: 'poko', m: 'go' }] },
             ]
           },
           {
             id: 'food', icon: '🍽️', name: 'Restaurant', count: 5,
             desc: 'Order Kerala\'s famous cuisine and connect over food.',
             phrases: [
-              { en: 'Give me one plate rice.', native: 'Oru plate chorum tharanam.', roman: 'Oru = one · chorum = rice · tharanam = please give', words: [{ w: 'Oru', m: 'one' }, { w: 'chorum', m: 'rice' }, { w: 'tharanam', m: 'please give' }] },
-              { en: 'Give me some water.', native: 'Konjam vellam tharanam.', roman: 'Konjam = some · vellam = water', words: [{ w: 'Konjam', m: 'some' }, { w: 'vellam', m: 'water' }, { w: 'tharanam', m: 'please give' }] },
-              { en: 'The food is very tasty!', native: 'Kazhicha nannayirunnu!', roman: 'Kazhicha = the eaten food · nannayirunnu = was very good', words: [{ w: 'nannayirunnu', m: 'was very good' }] },
-              { en: 'Please bring the bill.', native: 'Bill kondu varoo.', roman: 'kondu varoo = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'kondu varoo', m: 'please bring' }] },
-              { en: 'Where is the washroom?', native: 'Toilet evide und?', roman: 'evide = where · und = is there?', words: [{ w: 'evide', m: 'where' }, { w: 'und', m: 'is there?' }] },
+              { en: 'Give me one plate rice.', native: 'Oru plate chorum tharanam.', script: 'ഒരു പ്ലേറ്റ് ചോറ് തരണം.', roman: 'Oru = one · chorum = rice · tharanam = please give', words: [{ w: 'Oru', m: 'one' }, { w: 'chorum', m: 'rice' }, { w: 'tharanam', m: 'please give' }] },
+              { en: 'Give me some water.', native: 'Konjam vellam tharanam.', script: 'കുറച്ചു വെള്ളം തരണം.', roman: 'Konjam = some · vellam = water', words: [{ w: 'Konjam', m: 'some' }, { w: 'vellam', m: 'water' }, { w: 'tharanam', m: 'please give' }] },
+              { en: 'The food is very tasty!', native: 'Kazhicha nannayirunnu!', script: 'ഭക്ഷണം വളരെ നന്നായിരുന്നു!', roman: 'Kazhicha = the eaten food · nannayirunnu = was very good', words: [{ w: 'nannayirunnu', m: 'was very good' }] },
+              { en: 'Please bring the bill.', native: 'Bill kondu varoo.', script: 'ബിൽ കൊണ്ടു വരൂ.', roman: 'kondu varoo = please bring', words: [{ w: 'Bill', m: 'bill' }, { w: 'kondu varoo', m: 'please bring' }] },
+              { en: 'Where is the washroom?', native: 'Toilet evide und?', script: 'ടോയ്‌ലറ്റ് എവിടെയുണ്ട്?', roman: 'evide = where · und = is there?', words: [{ w: 'evide', m: 'where' }, { w: 'und', m: 'is there?' }] },
             ]
           }
         ]
@@ -756,15 +891,22 @@
         card.className = 'phrase-card';
         card.id = 'card-' + i;
 
-        const chips = p.words.map(w => `<div class="word-chip">${w.w}<span>${w.m}</span></div>`).join('');
+        const chips = p.words.map((w, j) => {
+          const cleanWord = w.w.replace(/'/g, "\\'");
+          return `<div class="word-chip" id="word-${i}-${j}" onclick="playWord(event, '${cleanWord}', '${currentLang}', 'word-${i}-${j}')">${w.w}<span>${w.m}</span></div>`;
+        }).join('');
 
         card.innerHTML = `
       <div class="phrase-header">
         <div class="phrase-number">${String(i + 1).padStart(2, '0')}</div>
         <div class="phrase-english">"${p.en}"</div>
+        <button class="speaker-btn" id="speaker-${i}" onclick="playPhrase(event, ${i}, '${p.native.replace(/'/g, "\\'")}', '${p.script ? p.script.replace(/'/g, "\\'") : ''}', '${currentLang}')" title="Listen to pronunciation">
+          <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
       </div>
       <div class="phrase-detail">
-        <div class="phrase-native">${p.native}</div>
+        <div class="phrase-script">${p.native}</div>
+        ${p.script ? `<div class="phrase-native">${p.script}</div>` : ''}
         <div class="phrase-transliteration">${p.roman}</div>
         <div class="phrase-breakdown">${chips}</div>
       </div>
@@ -787,6 +929,201 @@
     function updateProgress(sceneKey, sc, count) {
       const pct = Math.round((count / sc.count) * 100);
       document.getElementById('lesson-progress').style.width = pct + '%';
+    }
+
+    let currentUtterance = null;
+    let speakingElement = null;
+    let currentAudio = null;
+    let retryCount = 0;
+
+    function speakText(text, scriptText, langCode, elementId, isWord = false) {
+      // 1. Cancel active speech (both HTML5 Audio and Web Speech synthesis)
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      
+      // Clear visual states
+      if (speakingElement) {
+        speakingElement.classList.remove('speaking');
+        speakingElement = null;
+      }
+      
+      if (!text) return;
+
+      // Use native script for phrase playback, or fall back to romanized text for single words
+      const textToSpeak = (isWord ? text : scriptText) || text;
+      
+      const targetEl = document.getElementById(elementId);
+      if (targetEl) {
+        speakingElement = targetEl;
+        speakingElement.classList.add('speaking');
+      }
+
+      // Determine language locale for Google TTS
+      const gLangMap = { 'kn': 'kn', 'ta': 'ta', 'te': 'te', 'hi': 'hi', 'ml': 'ml' };
+      const glang = gLangMap[langCode] || langCode;
+
+      // Try Google Translate Neural Cloud TTS
+      const cleanText = textToSpeak.replace(/\[|\]/g, '');
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${glang}&q=${encodeURIComponent(cleanText)}`;
+      
+      const audio = new Audio(url);
+      currentAudio = audio;
+
+      // Handle slow mode speed
+      const speedBtn = document.getElementById('speed-toggle');
+      const isSlow = speedBtn && speedBtn.classList.contains('active');
+      const rate = isSlow ? 0.65 : (isWord ? 0.8 : 0.95);
+      audio.defaultPlaybackRate = rate;
+      audio.playbackRate = rate;
+
+      audio.onended = () => {
+        if (speakingElement === targetEl) {
+          targetEl.classList.remove('speaking');
+          speakingElement = null;
+        }
+        if (currentAudio === audio) {
+          currentAudio = null;
+        }
+      };
+
+      audio.onerror = () => {
+        console.warn("Google TTS failed. Falling back to browser SpeechSynthesis.");
+        speakTextFallback(text, langCode, elementId, isWord);
+      };
+
+      audio.play().catch(e => {
+        console.warn("Audio play blocked/failed. Falling back to browser SpeechSynthesis:", e);
+        speakTextFallback(text, langCode, elementId, isWord);
+      });
+    }
+
+    function speakTextFallback(text, langCode, elementId, isWord = false) {
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported in this browser.');
+        return;
+      }
+
+      const voices = window.speechSynthesis.getVoices();
+      
+      if (voices.length === 0) {
+        if (retryCount < 5) {
+          retryCount++;
+          setTimeout(() => speakTextFallback(text, langCode, elementId, isWord), 100);
+        }
+        return;
+      }
+      retryCount = 0;
+
+      // Clean the text to speak
+      const cleanText = text.replace(/\[|\]/g, '');
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      currentUtterance = utterance;
+
+      const targetEl = document.getElementById(elementId);
+      if (targetEl) {
+        speakingElement = targetEl;
+        speakingElement.classList.add('speaking');
+      }
+
+      const langMap = {
+        'kn': 'kn-IN',
+        'ta': 'ta-IN',
+        'te': 'te-IN',
+        'hi': 'hi-IN',
+        'ml': 'ml-IN'
+      };
+      const targetLocale = langMap[langCode] || langCode;
+
+      const matchLocale = (langA, langB) => {
+        if (!langA || !langB) return false;
+        const norm = l => l.toLowerCase().replace(/_/g, '-');
+        return norm(langA) === norm(langB);
+      };
+
+      let voice = voices.find(v => matchLocale(v.lang, targetLocale));
+
+      if (!voice) {
+        voice = voices.find(v => matchLocale(v.lang, 'en-IN') && (v.name.includes('Heera') || v.name.includes('Ravi') || v.name.includes('Neerja') || v.name.includes('Prabhat')));
+      }
+      if (!voice) {
+        voice = voices.find(v => matchLocale(v.lang, 'en-IN'));
+      }
+      if (!voice) {
+        voice = voices.find(v => v.lang.toLowerCase().replace(/_/g, '-').includes('-in') || v.name.toLowerCase().includes('india'));
+      }
+      if (!voice) {
+        voice = voices.find(v => v.lang.toLowerCase().startsWith('en-'));
+      }
+
+      if (voice) {
+        utterance.voice = voice;
+        utterance.lang = voice.lang;
+        console.log(`Fallback voice selected for ${langCode} (${targetLocale}): ${voice.name} (${voice.lang})`);
+      } else {
+        utterance.lang = targetLocale;
+      }
+
+      const speedBtn = document.getElementById('speed-toggle');
+      const isSlow = speedBtn && speedBtn.classList.contains('active');
+
+      utterance.rate = isSlow ? 0.55 : (isWord ? 0.75 : 0.85);
+
+      utterance.onend = () => {
+        if (speakingElement === targetEl) {
+          targetEl.classList.remove('speaking');
+          speakingElement = null;
+        }
+        currentUtterance = null;
+      };
+
+      utterance.onerror = (e) => {
+        console.error('SpeechSynthesis error:', e);
+        if (speakingElement === targetEl) {
+          targetEl.classList.remove('speaking');
+          speakingElement = null;
+        }
+        currentUtterance = null;
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playPhrase(event, index, text, scriptText, langCode) {
+      if (event) event.stopPropagation();
+      speakText(text, scriptText, langCode, `speaker-${index}`, false);
+    }
+
+    function playWord(event, text, langCode, elementId) {
+      if (event) event.stopPropagation();
+      speakText(text, '', langCode, elementId, true);
+    }
+
+    function toggleSpeed() {
+      const btn = document.getElementById('speed-toggle');
+      if (btn) {
+        btn.classList.toggle('active');
+        const isActive = btn.classList.contains('active');
+        const speedText = btn.querySelector('.speed-text');
+        if (speedText) {
+          speedText.textContent = isActive ? 'Slow Mode: On 🐢' : 'Slow Mode: Off';
+        }
+      }
+    }
+
+    // Warm up speech synthesis voices
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.getVoices();
+        };
+      }
     }
 
     applyTheme(currentLang);
