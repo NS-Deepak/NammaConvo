@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Namma Convo</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -971,7 +972,9 @@
       const cleanText = textToSpeak.replace(/\[|\]/g, '');
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${glang}&q=${encodeURIComponent(cleanText)}`;
       
-      const audio = new Audio(url);
+      const audio = new Audio();
+      audio.referrerPolicy = 'no-referrer';
+      audio.src = url;
       currentAudio = audio;
 
       // Handle slow mode speed
